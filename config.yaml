@@ -1,0 +1,12 @@
+app:
+  dir: "/files"
+  port: 9000
+  # user's list who have permissions to write
+  can_write:
+    - username
+    - user_a
+
+auth_secrets:
+  username: password
+  user_a: password_a
+  user_b: password_b

@@ -1,4 +1,5 @@
 app:
+  name: "API Box"
   dir: "/files"
   port: 9000
   # user's list who have permissions to write

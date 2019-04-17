@@ -29,7 +29,21 @@ $(document).ready(function(){
 		    var obj = JSON.parse(html);
 			var formattedJson = JSON.stringify(obj, null, 4);
 		    ctx.html("<pre>"+ syntaxHighlight(formattedJson) + "</pre>");
-		});
+        });
+        
+        $("#frm_add_doc").submit(function (e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    alert("API docs created successfully!"); // show response from the php script.
+                }
+            });
+        });
  });
 
 

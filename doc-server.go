@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -42,5 +43,14 @@ func docServer(cmd *cobra.Command, args []string) {
 // 5. User can see individual documentaion (both->html/markdown)
 
 func home(w http.ResponseWriter, r *http.Request) {
-
+	buf := readJSONtoMarkdownHTML("./example.json")
+	if err := ioutil.WriteFile("./files/example-md.html", buf.Bytes(), 0644); err != nil {
+		panic(err)
+	}
+	bb, err := ioutil.ReadFile("./files/example-md.html")
+	if err != nil {
+		panic(err)
+	}
+	w.Header().Add("Content-Type", "text/html")
+	w.Write(bb)
 }

@@ -103,6 +103,9 @@ type (
 		IndexMarkdown        string
 		MarkdownHTML         string
 		GithubMarkdownMinCSS string
+
+		DocServerLogin string
+		DocServerHome  string
 	}
 )
 

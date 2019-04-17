@@ -52,11 +52,15 @@ func init() {
 		IndexMarkdown:        getData("assets/index.md"),
 		MarkdownHTML:         getData("assets/markdown.html"),
 		GithubMarkdownMinCSS: getData("assets/github-markdown.min.css"),
+
+		DocServerLogin: getData("assets/login.html"),
+		DocServerHome:  getData("assets/home.html"),
 	}
 	// register commands
 	cmd.AddCommand(versionCmd)
 	cmd.AddCommand(serveLive)
 	cmd.AddCommand(buildOutput)
+	cmd.AddCommand(docServerCMD)
 }
 
 func readJSONtoHTML(str string) *bytes.Buffer {
@@ -103,10 +107,10 @@ func readJSONtoMarkdown(str string) *bytes.Buffer {
 	var rt Root
 	f, err := os.Open(str)
 	if err != nil {
-		log.Fatal("opening file", err.Error())
+		log.Fatal("opening file: ", err.Error())
 	}
 	if err = rt.Open(f); err != nil {
-		log.Fatal("parsing json file", err.Error())
+		log.Fatal("parsing json file: ", err.Error())
 	}
 
 	tm := template.New("main")
@@ -145,10 +149,10 @@ func readJSONtoMarkdownHTML(str string) *bytes.Buffer {
 	var rt Root
 	f, err := os.Open(str)
 	if err != nil {
-		log.Fatal("opening file", err.Error())
+		log.Fatal("opening file: ", err.Error())
 	}
 	if err = rt.Open(f); err != nil {
-		log.Fatal("parsing json file", err.Error())
+		log.Fatal("parsing json file: ", err.Error())
 	}
 
 	tm := template.New("main")
@@ -168,7 +172,7 @@ func readJSONtoMarkdownHTML(str string) *bytes.Buffer {
 		log.Fatal(err)
 	}
 	var buf *bytes.Buffer
-	buf = readJSONtoMarkdown(file)
+	buf = readJSONtoMarkdown(str)
 	mdHTML := markdown(buf.String())
 
 	data := struct {

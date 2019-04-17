@@ -1,9 +1,9 @@
 app:
-  name: "API Box"
+  name: "API Box v2"
   dir: "/files"
   port: 9000
-  # user's list who have permissions to write
-  can_write:
+  # user's list who have permissions to add/update/delete docs
+  curd:
     - username
     - user_a
 

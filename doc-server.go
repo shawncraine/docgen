@@ -61,7 +61,7 @@ func docServer(cmd *cobra.Command, args []string) {
 	// load documentations
 	loadDocumentations()
 
-	http.HandleFunc("/login", basicAuth(getLogin))
+	http.HandleFunc("/login", getLogin)
 	http.HandleFunc("/post-login", postLogin)
 	http.HandleFunc("/logout", logout)
 
@@ -84,11 +84,11 @@ func docServer(cmd *cobra.Command, args []string) {
 // 5. User can see individual documentaion (both->html/markdown)
 
 func home(w http.ResponseWriter, r *http.Request) {
+	username := ""
 	c, err := r.Cookie(cookieName)
-	if err != nil {
-		log.Println("home:", err)
+	if err == nil {
+		username = sess[c.Value]
 	}
-	username := sess[c.Value]
 	type app struct {
 		Name     string
 		Username string
@@ -213,9 +213,13 @@ func buildTemplates() {
 }
 
 func loadDocumentations() {
+	directory := viper.GetString("app.dir")
+	if _, err := os.Stat(directory); os.IsNotExist(err) {
+		os.Mkdir(directory, 0644)
+	}
 	const scannExt = ".json"
 	docs = make([]Doc, 0)
-	err := filepath.Walk(viper.GetString("app.dir"), func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}

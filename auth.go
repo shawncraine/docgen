@@ -48,13 +48,14 @@ func basicAuth(next http.HandlerFunc) http.HandlerFunc {
 			}
 			if err == http.ErrNoCookie {
 				http.Redirect(w, r, "/login?code=1", http.StatusSeeOther)
+				next.ServeHTTP(w, r)
 				return
 			}
 			http.Redirect(w, r, "/login?code=1", http.StatusSeeOther)
 			return
 		}
 		sessionToken := c.Value
-		if sess[sessionToken] == "" && r.URL.Path != "/login" {
+		if sess[sessionToken] == "" {
 			if r.Header.Get("X-Requested-With") == "xmlhttprequest" {
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte("401"))
@@ -76,12 +77,11 @@ func getAuthSecret(usrname string) string {
 func getLogin(w http.ResponseWriter, r *http.Request) {
 	// check already has valid session
 	c, err := r.Cookie(cookieName)
-	if err != nil {
-		log.Println("getLogin:", err)
-	}
-	if sess[c.Value] != "" {
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
-		return
+	if err == nil {
+		if sess[c.Value] != "" {
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
+			return
+		}
 	}
 	type app struct {
 		Name    string
@@ -137,10 +137,14 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 
 func logout(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie(cookieName)
-	if err != nil {
-		log.Println("logut:", err)
+	if err == nil {
+		delete(sess, c.Value)
+		http.SetCookie(w, &http.Cookie{
+			Name:    cookieName,
+			Value:   "",
+			Expires: time.Now().Add(-viper.GetDuration("app.session_expire") * time.Minute),
+		})
 	}
-	delete(sess, c.Value)
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 

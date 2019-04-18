@@ -215,7 +215,7 @@ func buildTemplates() {
 func loadDocumentations() {
 	directory := viper.GetString("app.dir")
 	if _, err := os.Stat(directory); os.IsNotExist(err) {
-		os.Mkdir(directory, 0644)
+		os.Mkdir(directory, os.ModePerm)
 	}
 	const scannExt = ".json"
 	docs = make([]Doc, 0)

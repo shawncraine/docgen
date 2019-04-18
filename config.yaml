@@ -1,13 +1,14 @@
 app:
-  name: "API Box v2"
-  dir: "/files"
+  name: "API Box"
+  dir: "./files"
   port: 9000
+  session_expire: 30 #minutes
   # user's list who have permissions to add/update/delete docs
-  curd:
-    - username
+  crud:
+    - root
     - user_a
 
 auth_secrets:
-  username: password
+  root: 12345
   user_a: password_a
   user_b: password_b

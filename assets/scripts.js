@@ -31,19 +31,65 @@ $(document).ready(function(){
 		    ctx.html("<pre>"+ syntaxHighlight(formattedJson) + "</pre>");
         });
         
-        $("#frm_add_doc").submit(function (e) {
+        $.ajaxSetup({
+            headers: {
+                'X-Requested-With': 'xmlhttprequest',
+            }
+        });
+        
+    $("#btnSubmit").click(function (e) {
+            // Get form
+            var form = $('#frm_add_doc')[0];
+
+            // Create an FormData object 
+            var data = new FormData(form);
+
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
-            var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: url,
-                data: form.serialize(), // serializes the form's elements.
-                success: function (data) {
-                    alert("API docs created successfully!"); // show response from the php script.
+                url: "/upload-doc",
+                enctype: 'multipart/form-data',
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                // data: form.serialize(), // serializes the form's elements.
+                success: function (resp) {
+                    if (resp == 401) {
+                        alert("Unauthorized! Please login");
+                        return;
+                    }
+                    if (resp==200){
+                        alert("API docs created successfully!"); // show response from the php script.
+                        location.reload();
+                        return;
+                    }
                 }
             });
         });
+
+        $(".btn-delete-doc").click(function () {
+            if (confirm("Are you sure!") == false){
+                return;
+            }
+            var name = $(this).data('doc-name');
+            $.post("/delete-doc", { name: name }, function (resp) {
+                if (resp == 401) {
+                    alert("Unauthorized! Please login");
+                    return;
+                }
+                if (resp==200){
+                   location.reload()
+                    alert("Documentaion deleted!");
+                }else{
+                    alert("Failed to delete documentaion!");
+                    return;
+                }
+            });
+        });
+
  });
 
 

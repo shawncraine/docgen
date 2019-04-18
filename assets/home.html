@@ -34,31 +34,47 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <legend class="text-center">API Docs</legend>
-                        <p class="text-muted text-right">UserName <a href="/logout">Logout</a></p>
-                        <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#btn_add_doc">Add Documentation</button>
-                        <p class="text-muted text-center">No API docs available!</p>
+                        <p class="text-muted text-right">
+                            @{{ if .Data.Username }}@
+                            @{{ .Data.Username }}@
+                            @{{ end }}@
+                            <a href="/logout">Logout</a>
+                        </p>
+
+                        @{{ if .Data.CRUD }}@
+                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#btn_add_doc">Add
+                            Documentation</button>
+                            <br><br>
+                        @{{ end }}@
+
+                        @{{ if not .Data.Docs }}@
+                            <p class="text-muted text-center">No API docs available!</p>
+                        @{{ end }}@
+
+                        @{{ if .Data.Message }}@
+                            <small class="text-danger">@{{ .Data.Message }}@</small>
+                            <br>
+                        @{{ end }}@
+
+                        @{{ if .Data.Docs }}@
                         <table class="table table-hover">
                             <tbody>
-                                <tr>
-                                    <td><b>School Management System</b></td>
-                                    <td><a href="#">HTML</a></td>
-                                    <td><a href="#">Markdown</a></td>
-                                    <td><a href="#">Delete?</a></td>
-                                </tr>
-                                <tr>
-                                    <td><b>SMS Pusher</b></td>
-                                    <td><a href="#">HTML</a></td>
-                                    <td><a href="#">Markdown</a></td>
-                                    <td><a href="#">Delete?</a></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Email Pusher</b></td>
-                                    <td><a href="#">HTML</a></td>
-                                    <td><a href="#">Markdown</a></td>
-                                    <td><a href="#">Delete?</a></td>
-                                </tr>
+                                @{{ range $id, $d := .Data.Docs }}@
+                                    <tr id="@{{ $d.Name }}@">
+                                        <td><b>@{{ $d.Name }}@</b></td>
+                                        <td><a href="/docs?type=html&name=@{{ $d.Name }}@">HTML</a></td>
+                                        <td><a href="/docs?type=md&name=@{{ $d.Name }}@">Markdown</a></td>
+                                        @{{ if $.Data.CRUD }}@
+                                            <td>
+                                                <a href="javascript:;" class="text-danger btn-delete-doc" data-doc-name="@{{ $d.Name }}@" >Delete</a>
+                                            </td>
+                                        @{{ end }}@
+                                    </tr>
+                                @{{ end }}@
                             </tbody>
                         </table>
+                        @{{ end }}@
+
                     </div>
                 </div>
             </div>
@@ -70,6 +86,7 @@
             @{{ .Assets.ScriptsJS | js }}@
         </script>
 
+        @{{ if .Data.CRUD }}@
         <!-- Modal -->
         <div id="btn_add_doc" class="modal fade" role="dialog">
             <div class="modal-dialog modal-sm">
@@ -81,17 +98,21 @@
                         <h4 class="modal-title">Add new API Docs</h4>
                     </div>
                     <div class="modal-body">
-                        <form id="frm_add_doc" method="post" action="/upload-doc">
-                            <input type="name" name="name" placeholder="Enter your API docs name" required class="form-control" />
+                        <form id="frm_add_doc" method="post" action="/upload-doc" enctype="multipart/form-data">
+                            <input type="name" name="name"  id="file_name" placeholder="Enter your API docs name" required class="form-control" />
                             <br>
                             <input type="file" name="file"required class="form-control" />
                             <br>
                             <div class="form-group">
-                                <input type="submit" name="submit" value="Submit" class="btn btn-primary btn-block" />
+                                <input type="submit" name="btnSubmit" id="btnSubmit" value="Submit" class="btn btn-primary btn-block" />
                             </div>
                         </form>
                         <small class="text-info">*Use postman collection > 2.1</small>
                     </div>
                 </div>
+            </div>
+        </div>
+        @{{ end }}@
+
 </body>
 </html>

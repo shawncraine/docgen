@@ -100,8 +100,6 @@ func getLogin(w http.ResponseWriter, r *http.Request) {
 		switch f {
 		default:
 			data.Data.Message = ""
-		case "1":
-			data.Data.Message = "Unauthorized! Please login"
 		case "2":
 			data.Data.Message = "Invalid username or password!"
 		}

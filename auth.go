@@ -117,7 +117,7 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	usrname := strings.TrimSpace(strings.ToLower(r.Form.Get("username")))
+	usrname := strings.TrimSpace(strings.ToLower(r.Form.Get("email")))
 	password := strings.TrimSpace(r.Form.Get("password"))
 	if verifyAuth(usrname, password) {
 		token := uid()

@@ -35,7 +35,7 @@
                     <div class="panel-body">
                         <legend>Login</legend>
                         <form id="login-form" method="post" action="/post-login">
-                                <input type="text" name="username" placeholder="Enter your username" required class="form-control" />
+                                <input type="email" name="email" placeholder="Enter your email address" required class="form-control" />
                             <br>
                                 <input type="password" name="password" placeholder="Enter your password" required class="form-control" />
                             <br>
@@ -47,6 +47,8 @@
                                 <input type="submit" name="submit" value="Login" class="btn btn-primary btn-block" />
                             </div>
                         </form>
+                        <br>
+                        <a href="#" class="text-info" data-toggle="modal" data-target="#btn_signup">Don't have an account? Signup</a>
                     </div>
                 </div>
             </div>
@@ -57,5 +59,37 @@
             @{{ .Assets.BootstrapJS | js }}@
             @{{ .Assets.ScriptsJS | js }}@
         </script>
+
+        <!-- Modal -->
+        <div id="btn_signup" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-sm">
+        
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add new API Docs</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frm_signup" method="post" action="/register">
+                            <input type="text" name="name" id="name" placeholder="Enter your name" required
+                                class="form-control" />
+                            <br>
+                            <input type="email" name="username" id="username" placeholder="Enter your email address" required
+                                class="form-control" />
+                            <br>
+                            <input type="password" name="name" id="password" placeholder="Enter your password" required class="form-control" />
+                            <br>
+                            <div class="form-group">
+                                <input type="submit" name="btnSubmit" id="btnSubmit" value="Submit"
+                                    class="btn btn-success btn-block" />
+                            </div>
+                        </form>
+                        <small class="text-info">Please contact with admin for approval!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 </body>
 </html>

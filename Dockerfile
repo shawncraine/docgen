@@ -24,4 +24,4 @@ LABEL maintainer "thedevsaddam@gmail.com"
 COPY --from=0 /go/bin/docgen /usr/local/bin/docgen
 COPY ./files/config.yaml /files/
 EXPOSE 9000
-ENTRYPOINT ["docgen"]
+ENTRYPOINT ["docgen", "doc-server"]

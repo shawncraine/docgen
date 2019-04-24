@@ -10,13 +10,13 @@
         @{{ if .Data.Name }}@
         @{{ .Data.Name }}@ |
         @{{ end }}@
-        Home
+        ACL
     </title>
     <!-- Bootstrap -->
-        <style media="screen">
-            @{{ .Assets.BootstrapCSS | css }}@ 
-            @{{ .Assets.StylesCSS | css }}@
-        </style>
+    <style media="screen">
+        @{{ .Assets.BootstrapCSS | css }}@
+        @{{ .Assets.StylesCSS | css }}@
+    </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,40 +41,11 @@
                             <a href="/logout">Logout</a>
                         </p>
                         @{{ if .Data.CRUD }}@
-                            <a href="/acl" class="btn btn-info btn-xs">ACL</a>
+                            <a href="/home" class="btn btn-info btn-xs">Home</a>
                             <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#btn_add_doc">Add
-                            Documentation</button>
-                            <br><br>
+                                Documentation</button>
+                        <br><br>
                         @{{ end }}@
-
-                        @{{ if not .Data.Docs }}@
-                            <p class="text-muted text-center">No API docs available!</p>
-                        @{{ end }}@
-
-                        @{{ if .Data.Message }}@
-                            <small class="text-danger">@{{ .Data.Message }}@</small>
-                            <br>
-                        @{{ end }}@
-
-                        @{{ if .Data.Docs }}@
-                        <table class="table table-hover">
-                            <tbody>
-                                @{{ range $id, $d := .Data.Docs }}@
-                                    <tr id="@{{ $d.Name }}@">
-                                        <td><b>@{{ $d.Name }}@</b></td>
-                                        <td><a href="/docs?type=html&name=@{{ $d.Name }}@">HTML</a></td>
-                                        <td><a href="/docs?type=md&name=@{{ $d.Name }}@">Markdown</a></td>
-                                        @{{ if $.Data.CRUD }}@
-                                            <td>
-                                                <a href="javascript:;" class="text-danger btn-delete-doc" data-doc-name="@{{ $d.Name }}@" >Delete</a>
-                                            </td>
-                                        @{{ end }}@
-                                    </tr>
-                                @{{ end }}@
-                            </tbody>
-                        </table>
-                        @{{ end }}@
-
                     </div>
                 </div>
             </div>
@@ -90,7 +61,7 @@
         <!-- Modal -->
         <div id="btn_add_doc" class="modal fade" role="dialog">
             <div class="modal-dialog modal-sm">
-        
+
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -99,12 +70,14 @@
                     </div>
                     <div class="modal-body">
                         <form id="frm_add_doc" method="post" action="/upload-doc" enctype="multipart/form-data">
-                            <input type="text" name="name"  id="file_name" placeholder="Enter your API docs name" required class="form-control" />
+                            <input type="text" name="name" id="file_name" placeholder="Enter your API docs name"
+                                required class="form-control" />
                             <br>
-                            <input type="file" name="file"required class="form-control" />
+                            <input type="file" name="file" required class="form-control" />
                             <br>
                             <div class="form-group">
-                                <input type="submit" name="btnSubmit" id="btnSubmit" value="Submit" class="btn btn-primary btn-block" />
+                                <input type="submit" name="btnSubmit" id="btnSubmit" value="Submit"
+                                    class="btn btn-primary btn-block" />
                             </div>
                         </form>
                         <small class="text-info">*Use postman collection > 2.1</small>
@@ -115,4 +88,5 @@
         @{{ end }}@
 
 </body>
+
 </html>

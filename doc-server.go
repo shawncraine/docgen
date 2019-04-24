@@ -66,6 +66,8 @@ func docServer(cmd *cobra.Command, args []string) {
 	http.HandleFunc("/logout", logout)
 
 	http.HandleFunc("/", basicAuth(home))
+	http.HandleFunc("/acl", basicAuth(acl))
+
 	http.HandleFunc("/docs", basicAuth(viewDoc))
 	http.HandleFunc("/upload-doc", basicAuth(uploadDoc))
 	http.HandleFunc("/delete-doc", basicAuth(deleteDoc))
@@ -118,6 +120,37 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	buf := new(bytes.Buffer)
 	if err := tmDoc.ExecuteTemplate(buf, "home", data); err != nil {
+		log.Fatal(err)
+	}
+	w.Header().Add("Content-Type", "text/html")
+	w.Write(buf.Bytes())
+}
+
+func acl(w http.ResponseWriter, r *http.Request) {
+	username := ""
+	c, err := r.Cookie(cookieName)
+	if err == nil {
+		username = sess[c.Value]
+	}
+	type app struct {
+		Name     string
+		Username string
+		Message  string
+		CRUD     bool
+	}
+	data := struct {
+		Assets Assets
+		Data   app
+	}{
+		Assets: assets,
+		Data: app{
+			Name:     viper.GetString("app.name"),
+			Username: username,
+			CRUD:     hasCRUDpermission(username),
+		},
+	}
+	buf := new(bytes.Buffer)
+	if err := tmDoc.ExecuteTemplate(buf, "acl", data); err != nil {
 		log.Fatal(err)
 	}
 	w.Header().Add("Content-Type", "text/html")
@@ -209,7 +242,8 @@ func buildTemplates() {
 		"markdown":        markdown,
 	}
 	tmDoc = template.Must(template.New("login").Delims("@{{", "}}@").Funcs(fMap).Parse(assets.DocServerLogin))
-	template.Must(tmDoc.New("home").Funcs(fMap).Delims("@{{", "}}@").Parse(assets.DocServerHome))
+	tmDoc = template.Must(tmDoc.New("home").Funcs(fMap).Delims("@{{", "}}@").Parse(assets.DocServerHome))
+	template.Must(tmDoc.New("acl").Funcs(fMap).Delims("@{{", "}}@").Parse(assets.DocServerACL))
 }
 
 func loadDocumentations() {

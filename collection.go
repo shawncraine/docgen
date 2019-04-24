@@ -106,6 +106,7 @@ type (
 
 		DocServerLogin string
 		DocServerHome  string
+		DocServerACL   string
 	}
 )
 

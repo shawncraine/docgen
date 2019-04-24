@@ -55,6 +55,7 @@ func init() {
 
 		DocServerLogin: getData("assets/login.html"),
 		DocServerHome:  getData("assets/home.html"),
+		DocServerACL:   getData("assets/acl.html"),
 	}
 	// register commands
 	cmd.AddCommand(versionCmd)

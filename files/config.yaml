@@ -5,10 +5,10 @@ app:
   session_expire: 30 #minutes
   # user's list who have permissions to add/update/delete docs
   crud:
-    - root
+    - root@mail.com
     - user_a
 
 auth_secrets:
-  root: 12345
+  root@mail.com: 12345
   user_a: password_a
   user_b: password_b

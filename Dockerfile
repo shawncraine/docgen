@@ -18,11 +18,10 @@ RUN dep ensure -v -vendor-only && \
 
 # Copy the binary and the config to new image
 FROM alpine:latest 
-RUN apk add vim && \
-    apk add --no-cache --update ca-certificates openssl && \
+RUN apk add --no-cache --update ca-certificates openssl && \
     apk add --no-cache tzdata
 LABEL maintainer "thedevsaddam@gmail.com"
 COPY --from=0 /go/bin/docgen /usr/local/bin/docgen
-ADD ./files/config.yaml /files/config.yaml
+COPY ./files/config.yaml /files/
 EXPOSE 9000
 ENTRYPOINT ["docgen"]
